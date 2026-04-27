@@ -69,8 +69,22 @@ def monitor():
                         execs = json.loads(r.read()).get("data") or []
                         if execs:
                             latest = execs[0] if execs else None
-                            if latest.get("status") in ("error","crashed"):
-                                current.add(f"{wf_id}|{wf_name}")
+                            if latest and latest.get("status") in ("error","crashed"):
+                                # ดึง error message
+                                err_msg = ""
+                                try:
+                                    rd = latest.get("data", {}).get("resultData", {})
+                                    err_msg = rd.get("error", {}).get("message", "") or ""
+                                    if not err_msg:
+                                        # ลองหาจาก lastNodeExecuted
+                                        last_node = rd.get("lastNodeExecuted", "")
+                                        run_data = rd.get("runData", {})
+                                        if last_node and last_node in run_data:
+                                            node_data = run_data[last_node]
+                                            if node_data and len(node_data) > 0:
+                                                err_msg = node_data[0].get("error", {}).get("message", "") or ""
+                                except: pass
+                                current.add(f"{wf_id}|{wf_name}|{err_msg[:200]}")
                 except: pass
             new_err = current - prev_errors
             if new_err:
