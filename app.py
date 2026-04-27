@@ -76,7 +76,16 @@ def monitor():
             if new_err:
                 names = ", ".join(x.split("|")[1] for x in new_err)
                 send_toast(f"n8n Error ({len(new_err)} workflow)", names)
-                send_discord(f"🔴 n8n Error ({len(new_err)} workflow)", f"**Workflow มีปัญหา:**\n" + "\n".join(f"• {x.split('|')[1]}" for x in new_err))
+                lines = []
+                for x in new_err:
+                    parts = x.split("|")
+                    name = parts[1] if len(parts) > 1 else x
+                    err = parts[2] if len(parts) > 2 and parts[2] else "ไม่ทราบสาเหตุ"
+                    lines.append(f"• **{name}**\n  ❌ {err}")
+                send_discord(
+                    f"🔴 n8n Workflow Error ({len(new_err)} workflow)",
+                    "\n\n".join(lines)
+                )
                 print(f"[Alert] {names}")
             prev_errors = current
         time.sleep(30)
