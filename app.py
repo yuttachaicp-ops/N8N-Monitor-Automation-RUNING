@@ -103,7 +103,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             b = MANIFEST_JSON.encode('utf-8')
             self.send_response(200)
             self.send_header('Content-Type','application/manifest+json')
-            self.cors()
+            self.send_cors()
             self.send_header('Content-Length',str(len(b)))
             self.end_headers(); self.wfile.write(b)
             return
@@ -111,14 +111,14 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             b = SW_CODE.encode('utf-8')
             self.send_response(200)
             self.send_header('Content-Type','application/javascript')
-            self.cors()
+            self.send_cors()
             self.send_header('Content-Length',str(len(b)))
             self.end_headers(); self.wfile.write(b)
             return
         if p.path == '/icon.png':
             self.send_response(200)
             self.send_header('Content-Type','image/png')
-            self.cors()
+            self.send_cors()
             self.send_header('Content-Length',str(len(ICON_DATA)))
             self.end_headers(); self.wfile.write(ICON_DATA)
             return
