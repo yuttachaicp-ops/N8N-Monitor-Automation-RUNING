@@ -14,6 +14,10 @@ MANIFEST = '{"name": "n8n Workflow Monitor", "short_name": "n8n Monitor", "descr
 SW_JS = "const CACHE='n8n-v1';\nself.addEventListener('install',e=>{self.skipWaiting();});\nself.addEventListener('activate',e=>{e.waitUntil(clients.claim());});\nself.addEventListener('fetch',e=>{\n  if(e.request.url.includes('/proxy?'))return;\n  e.respondWith(fetch(e.request).catch(()=>caches.match(e.request)));\n});\nself.addEventListener('push',e=>{\n  const d=e.data?e.data.json():{};\n  e.waitUntil(self.registration.showNotification(d.title||'n8n Monitor',{\n    body:d.body||'มีการแจ้งเตือนใหม่',\n    icon:'/icon.png',tag:'n8n',renotify:true,vibrate:[200,100,200]\n  }));\n});\nself.addEventListener('notificationclick',e=>{\n  e.notification.close();\n  e.waitUntil(clients.matchAll({type:'window'}).then(l=>{\n    if(l.length>0){l[0].focus();return;}\n    clients.openWindow('/');\n  }));\n});"
 ICON_PNG = __import__('base64').b64decode('iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAACpklEQVR4nO3OQQkAMQDEwGg55fVUQ+ehnyUQGAHDd0/yjPkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOo/bff3U50NzNmAAAAAElFTkSuQmCC')
 
+MANIFEST_JSON = '{"name": "n8n Workflow Monitor", "short_name": "n8n Monitor", "description": "Monitor n8n workflow executions", "start_url": "/", "display": "standalone", "background_color": "#0a0c0f", "theme_color": "#22d3a0", "orientation": "portrait-primary", "icons": [{"src": "/icon.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"}, {"src": "/icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}]}'
+SW_CODE = "const CACHE='n8n-v1';\nself.addEventListener('install',e=>{self.skipWaiting();});\nself.addEventListener('activate',e=>{e.waitUntil(clients.claim());});\nself.addEventListener('fetch',e=>{\n  if(e.request.url.includes('/proxy?'))return;\n  e.respondWith(fetch(e.request).catch(()=>caches.match(e.request)));\n});"
+ICON_DATA = __import__('base64').b64decode('iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAACpklEQVR4nO3OQQkAMQDEwGg55fVUQ+ehnyUQGAHDd0/yjPkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOoMR9EjfkgaswHUWM+iBrzQdSYD6LGfBA15oOo/bff3U50NzNmAAAAAElFTkSuQmCC')
+
 def send_toast(title, body):
     try:
         import subprocess
@@ -93,6 +97,30 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                 self.send_cors()
                 self.send_header("Content-Length", str(len(err)))
                 self.end_headers(); self.wfile.write(err)
+            return
+        # Serve PWA files
+        if p.path == '/manifest.json':
+            b = MANIFEST_JSON.encode('utf-8')
+            self.send_response(200)
+            self.send_header('Content-Type','application/manifest+json')
+            self.cors()
+            self.send_header('Content-Length',str(len(b)))
+            self.end_headers(); self.wfile.write(b)
+            return
+        if p.path == '/sw.js':
+            b = SW_CODE.encode('utf-8')
+            self.send_response(200)
+            self.send_header('Content-Type','application/javascript')
+            self.cors()
+            self.send_header('Content-Length',str(len(b)))
+            self.end_headers(); self.wfile.write(b)
+            return
+        if p.path == '/icon.png':
+            self.send_response(200)
+            self.send_header('Content-Type','image/png')
+            self.cors()
+            self.send_header('Content-Length',str(len(ICON_DATA)))
+            self.end_headers(); self.wfile.write(ICON_DATA)
             return
         # Serve HTML
         html = HTML.encode("utf-8")
