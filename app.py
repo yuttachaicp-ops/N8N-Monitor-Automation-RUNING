@@ -3,6 +3,29 @@ import http.server, socketserver, urllib.request, urllib.error
 import json, os, sys, time, socket, threading, webbrowser
 
 import os
+DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1498220624626057348/UcYbJyIFXpWjPJy-nezRP1jooIK_DVIugcAYiNO-WkwHS5AOWDg0qMRs6iSH97YkXIU4"
+
+def send_discord(title, message):
+    try:
+        import json as _json
+        payload = _json.dumps({
+            "embeds": [{
+                "title": title,
+                "description": message,
+                "color": 15158332
+            }]
+        }).encode("utf-8")
+        req = urllib.request.Request(
+            DISCORD_WEBHOOK,
+            data=payload,
+            headers={"Content-Type": "application/json"},
+            method="POST"
+        )
+        urllib.request.urlopen(req, timeout=10)
+        print(f"[Discord] Sent: {title}")
+    except Exception as e:
+        print(f"[Discord] Error: {e}")
+
 PORT = int(os.environ.get("PORT", 7788))
 api_key = ""
 prev_errors = set()
@@ -53,6 +76,7 @@ def monitor():
             if new_err:
                 names = ", ".join(x.split("|")[1] for x in new_err)
                 send_toast(f"n8n Error ({len(new_err)} workflow)", names)
+                send_discord(f"🔴 n8n Error ({len(new_err)} workflow)", f"**Workflow มีปัญหา:**\n" + "\n".join(f"• {x.split('|')[1]}" for x in new_err))
                 print(f"[Alert] {names}")
             prev_errors = current
         time.sleep(30)
